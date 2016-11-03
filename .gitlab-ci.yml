@@ -22,8 +22,8 @@ build:arm:
         - cd temp
         - cmake ..
         - make -j
-        - mkdir -p build
-        - make install DESTDIR=${PWD}/build
+        - mkdir -p ../build
+        - make install DESTDIR=../build
     artifacts:
         paths:
             - build/
@@ -72,8 +72,8 @@ build:amd64:
         - cd temp
         - cmake ..
         - make -j
-        - mkdir -p build
-        - make install DESTDIR=${PWD}/build
+        - mkdir -p ../build
+        - make install DESTDIR=../build
     artifacts:
         paths:
             - build/
