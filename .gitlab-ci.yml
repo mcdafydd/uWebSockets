@@ -36,12 +36,11 @@ package:arm:
     variables:
         ARCH: "armhf"
     script:
-        - cd build
-        - fpm -f -m info@openrov.com -s dir -t deb -a ${ARCH} -n ${PACKAGE_NAME} -v ${VERSION} --description "uWebSockets" ./
-        - cp *.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
+        - fpm -f -m info@openrov.com -s dir -t deb -a ${ARCH} -n ${PACKAGE_NAME} -v ${VERSION} --description ${PACKAGE_NAME} -C ./build ./
+        - cp ${PACKAGE_NAME}*.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
     artifacts:
         paths:
-            - "*.deb"
+            - "${PACKAGE_NAME}*.deb"
     dependencies:
         - build:arm
 
@@ -87,12 +86,11 @@ package:amd64:
     variables:
         ARCH: "amd64"
     script:
-        - cd build
-        - fpm -f -m info@openrov.com -s dir -t deb -a ${ARCH} -n ${PACKAGE_NAME} -v ${VERSION} --description "uWebSockets" ./
-        - cp *.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
+        - fpm -f -m info@openrov.com -s dir -t deb -a ${ARCH} -n ${PACKAGE_NAME} -v ${VERSION} --description ${PACKAGE_NAME} -C ./build ./
+        - cp ${PACKAGE_NAME}*.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
     artifacts:
         paths:
-            - "*.deb"
+            - "${PACKAGE_NAME}*.deb"
     dependencies:
         - build:amd64
 
