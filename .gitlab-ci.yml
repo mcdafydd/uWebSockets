@@ -3,8 +3,9 @@ stages:
     - package
     - publish
 
+# Package name must be lowercase
 variables:
-    PACKAGE_NAME: "uWebSockets"
+    PACKAGE_NAME: "uwebsockets"
     VERSION: "0.11.0"
 
 ###############
