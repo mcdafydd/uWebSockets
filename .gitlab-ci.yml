@@ -1,0 +1,107 @@
+stages:
+    - build
+    - package
+    - publish
+
+variables:
+    PACKAGE_NAME: "uWebSockets"
+    VERSION: "0.11.0"
+
+###############
+# arm
+###############
+build:arm:
+    image: openrovdocker/armhf-buildtools
+    tags:
+        - arm
+    stage: build
+    script:
+        - wget http://openrov-software-nightlies.s3-us-west-2.amazonaws.com/gitlab/armhf/libuv/libuv_1.1.0_armhf.deb
+        - dpkg -i libuv_1.1.0_armhf.deb
+        - mkdir temp
+        - cd temp
+        - cmake ..
+        - make -j
+        - mkdir -p build
+        - make install DESTDIR=${PWD}/build
+    artifacts:
+        paths:
+            - build/
+    
+package:arm:
+    image: openrovdocker/armhf-buildtools
+    tags:
+        - arm
+    stage: package
+    variables:
+        ARCH: "armhf"
+    script:
+        - fpm -f -m info@openrov.com -s dir -t deb -a ${ARCH} -n ${PACKAGE_NAME} -v ${VERSION} --description "uWebSockets" ./
+        - cp *.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
+    artifacts:
+        paths:
+            - "*.deb"
+    dependencies:
+        - build:arm
+
+publish:arm:
+    image: openrovdocker/armhf-buildtools
+    tags:
+        - arm
+    stage: publish
+    variables:
+        ARCH: "armhf"
+    script:
+        - aws s3 cp ./ s3://$S3_BUCKET/$ARCH/$PACKAGE_NAME --recursive --exclude "*" --include "*.deb"
+    dependencies:
+        - package:arm
+
+###############
+# amd64
+###############
+
+build:amd64:
+    image: openrovdocker/amd64-buildtools
+    tags:
+        - amd64
+    stage: build
+    script:
+        - wget http://openrov-software-nightlies.s3-us-west-2.amazonaws.com/gitlab/amd64/libuv/libuv_1.1.0_amd64.deb
+        - dpkg -i libuv_1.1.0_amd64.deb
+        - mkdir temp
+        - cd temp
+        - cmake ..
+        - make -j
+        - mkdir -p build
+        - make install DESTDIR=${PWD}/build
+    artifacts:
+        paths:
+            - build/
+
+package:amd64:
+    image: openrovdocker/amd64-buildtools
+    tags:
+        - amd64
+    stage: package
+    variables:
+        ARCH: "amd64"
+    script:
+        - fpm -f -m info@openrov.com -s dir -t deb -a ${ARCH} -n ${PACKAGE_NAME} -v ${VERSION} --description "Libuv" ./
+        - cp *.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
+    artifacts:
+        paths:
+            - "*.deb"
+    dependencies:
+        - build:amd64
+
+publish:amd64:
+    image: openrovdocker/amd64-buildtools
+    tags:
+        - amd64
+    stage: publish
+    variables:
+        ARCH: "amd64"
+    script:
+        - aws s3 cp ./ s3://$S3_BUCKET/$ARCH/$PACKAGE_NAME --recursive --exclude "*" --include "*.deb"
+    dependencies:
+        - package:amd64
