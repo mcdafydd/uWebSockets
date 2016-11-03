@@ -3,9 +3,7 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 11)
 if(CMAKE_VERSION VERSION_LESS "3.1")
     # CMake 3.0 does not implement "CMAKE_CXX_STANDARD":
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "--std=gnu++11 ${CMAKE_CXX_FLAGS}")
-    endif()
+    add_compile_options(-std=c++11)
 endif()
 project (µWebSockets)
 
