@@ -40,7 +40,7 @@ package:arm:
         - cp ${PACKAGE_NAME}*.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
     artifacts:
         paths:
-            - "${PACKAGE_NAME}*.deb"
+            - "*.deb"
     dependencies:
         - build:arm
 
@@ -90,7 +90,7 @@ package:amd64:
         - cp ${PACKAGE_NAME}*.deb ${PACKAGE_NAME}_${ARCH}_latest.deb
     artifacts:
         paths:
-            - "${PACKAGE_NAME}*.deb"
+            - "*.deb"
     dependencies:
         - build:amd64
 
